@@ -14,7 +14,7 @@ class PilotoResponse(BaseModel):
     fecha_creacion: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class PilotoUpdate(BaseModel):
     nombre: str | None = None

@@ -15,7 +15,7 @@ class ItemResponse(BaseModel):
     fecha_creacion: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class ItemUpdate(BaseModel):
     nombre_item: str | None = None

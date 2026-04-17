@@ -18,7 +18,7 @@ class MotocicletaResponse(BaseModel):
     hora_ingreso: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class MotocicletaUpdate(BaseModel):
     modelo: str | None = None

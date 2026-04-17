@@ -20,7 +20,7 @@ class EstadoServicioResponse(BaseModel):
     es_estado_general: bool = False
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class EstadoUpdate(BaseModel):

@@ -14,7 +14,7 @@ class UsuarioResponse(BaseModel):
     fecha_creacion: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 class UsuarioLogin(BaseModel):
     email: EmailStr
