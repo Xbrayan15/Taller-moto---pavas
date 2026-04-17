@@ -1,0 +1,9 @@
+[build-system]
+requires = ["pip", "setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "taller-moto-backend"
+version = "1.0.0"
+requires-python = ">=3.11,<3.14"
+description = "Motorcycle Workshop Management System Backend"
