@@ -1,0 +1,230 @@
+### Variables
+@baseUrl = http://localhost:8000
+@token = 
+
+### ============================================
+### 1. REGISTRO DE USUARIO
+### ============================================
+
+### Crear usuario ADMIN
+POST {{baseUrl}}/api/usuarios/registro
+Content-Type: application/json
+
+{
+  "email": "admin@taller.com",
+  "rol": "admin",
+  "contraseña": "admin123"
+}
+
+### Crear usuario MECANICO
+POST {{baseUrl}}/api/usuarios/registro
+Content-Type: application/json
+
+{
+  "email": "mecanico@taller.com",
+  "rol": "mecanico",
+  "contraseña": "mecanico123"
+}
+
+### ============================================
+### 2. LOGIN (Obtener Token)
+### ============================================
+
+### Login admin
+POST {{baseUrl}}/api/usuarios/login
+Content-Type: application/json
+
+{
+  "email": "admin@taller.com",
+  "contraseña": "admin123"
+}
+
+### Login mecanico
+POST {{baseUrl}}/api/usuarios/login
+Content-Type: application/json
+
+{
+  "email": "mecanico@taller.com",
+  "contraseña": "mecanico123"
+}
+
+### ============================================
+### 3. PILOTOS
+### ============================================
+
+### Crear piloto
+POST {{baseUrl}}/api/pilotos/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Juan Pérez",
+  "telefono": "3001234567",
+  "email": "juan@example.com"
+}
+
+### Crear otro piloto
+POST {{baseUrl}}/api/pilotos/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "María García",
+  "telefono": "3009876543",
+  "email": "maria@example.com"
+}
+
+### Obtener todos los pilotos
+GET {{baseUrl}}/api/pilotos/
+Authorization: Bearer {{token}}
+
+### Obtener piloto por ID
+GET {{baseUrl}}/api/pilotos/1
+Authorization: Bearer {{token}}
+
+### Actualizar piloto
+PUT {{baseUrl}}/api/pilotos/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre": "Juan Pedro Pérez",
+  "telefono": "3001111111"
+}
+
+### Eliminar piloto
+DELETE {{baseUrl}}/api/pilotos/1
+Authorization: Bearer {{token}}
+
+### ============================================
+### 4. MOTOCICLETAS
+### ============================================
+
+### Crear motocicleta
+POST {{baseUrl}}/api/motocicletas/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "piloto_id": 1,
+  "modelo": "Honda CB500",
+  "año": 2022
+}
+
+### Crear otra motocicleta
+POST {{baseUrl}}/api/motocicletas/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "piloto_id": 2,
+  "modelo": "Yamaha MT-07",
+  "año": 2021
+}
+
+### Obtener todas las motocicletas
+GET {{baseUrl}}/api/motocicletas/
+Authorization: Bearer {{token}}
+
+### Obtener motocicleta por ID
+GET {{baseUrl}}/api/motocicletas/1
+Authorization: Bearer {{token}}
+
+### Actualizar motocicleta
+PUT {{baseUrl}}/api/motocicletas/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "modelo": "Honda CB600",
+  "año": 2023
+}
+
+### Eliminar motocicleta
+DELETE {{baseUrl}}/api/motocicletas/1
+Authorization: Bearer {{token}}
+
+### ============================================
+### 5. ITEMS (SERVICIOS)
+### ============================================
+
+### Crear item - Cambio de aceite
+POST {{baseUrl}}/api/items/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre_item": "Cambio de aceite",
+  "descripcion": "Cambio de aceite del motor",
+  "precio": "50000"
+}
+
+### Crear item - Revisión de frenos
+POST {{baseUrl}}/api/items/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre_item": "Revisión de frenos",
+  "descripcion": "Inspección completa del sistema de frenos",
+  "precio": "30000"
+}
+
+### Crear item - Alineación
+POST {{baseUrl}}/api/items/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre_item": "Alineación de ruedas",
+  "descripcion": "Alineación y balanceo de ruedas",
+  "precio": "40000"
+}
+
+### Obtener todos los items
+GET {{baseUrl}}/api/items/
+Authorization: Bearer {{token}}
+
+### Obtener item por ID
+GET {{baseUrl}}/api/items/1
+Authorization: Bearer {{token}}
+
+### Actualizar item
+PUT {{baseUrl}}/api/items/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nombre_item": "Cambio de aceite y filtro",
+  "precio": "60000"
+}
+
+### Eliminar item
+DELETE {{baseUrl}}/api/items/1
+Authorization: Bearer {{token}}
+
+### ============================================
+### 6. USUARIOS (Solo Admin)
+### ============================================
+
+### Obtener usuario actual
+GET {{baseUrl}}/api/usuarios/me
+Authorization: Bearer {{token}}
+
+### Obtener todos los usuarios (Solo admin)
+GET {{baseUrl}}/api/usuarios/
+Authorization: Bearer {{token}}
+
+### Eliminar usuario (Solo admin)
+DELETE {{baseUrl}}/api/usuarios/2
+Authorization: Bearer {{token}}
+
+### ============================================
+### 7. HEALTH CHECK
+### ============================================
+
+### Verificar salud de la API
+GET {{baseUrl}}/health
+
+### Obtener información de la API
+GET {{baseUrl}}/
