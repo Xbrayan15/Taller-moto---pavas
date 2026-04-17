@@ -1,7 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 from typing import Optional
-from pydantic import Field
 
 class MotocicletaCreate(BaseModel):
     piloto_id: int
@@ -11,14 +10,13 @@ class MotocicletaCreate(BaseModel):
     trabajos_reparacion: list[str] = Field(default_factory=list)
 
 class MotocicletaResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     piloto_id: int
     modelo: str
     año: int
     hora_ingreso: datetime
-
-    class Config:
-        orm_mode = True
 
 class MotocicletaUpdate(BaseModel):
     modelo: str | None = None

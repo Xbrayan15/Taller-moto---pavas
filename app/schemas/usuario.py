@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import datetime
 from typing import Optional
 
@@ -8,13 +8,12 @@ class UsuarioCreate(BaseModel):
     contraseña: str
 
 class UsuarioResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     email: str
     rol: str
     fecha_creacion: datetime
-
-    class Config:
-        orm_mode = True
 
 class UsuarioLogin(BaseModel):
     email: EmailStr

@@ -1,12 +1,14 @@
 from datetime import datetime
 from typing import Literal, Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 EstadoValor = Literal["pendiente", "en proceso", "terminado"]
 
 
 class EstadoServicioResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     motocicleta_id: int
     motocicleta_modelo: str
@@ -18,9 +20,6 @@ class EstadoServicioResponse(BaseModel):
     fecha_actualizacion: Optional[datetime] = None
     tiene_servicio: bool = True
     es_estado_general: bool = False
-
-    class Config:
-        orm_mode = True
 
 
 class EstadoUpdate(BaseModel):
