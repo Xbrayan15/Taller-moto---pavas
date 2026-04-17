@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
+import os
 from app.database import engine, Base
 from app.config import settings
 from app.models import Usuario, Piloto, Motocicleta, Item, TrabajoServicio
@@ -87,10 +88,25 @@ app = FastAPI(
     description="API para gestionar un taller de motos"
 )
 
+# Origenes permitidos para CORS (configurable por env var CORS_ORIGINS)
+configured_origins = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
+default_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+allow_origins = configured_origins or default_origins
+
 # Configurar CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # En producción, especificar los orígenes permitidos
+    allow_origins=allow_origins,
+    allow_origin_regex=r"https://.*\.(vercel\.app|onrender\.com)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
