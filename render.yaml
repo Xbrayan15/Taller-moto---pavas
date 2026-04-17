@@ -22,3 +22,5 @@ services:
         value: Taller Moto API
       - key: API_VERSION
         value: "1.0.0"
+      - key: CORS_ORIGINS
+        value: https://taller-motos-frontend-nu.vercel.app,http://localhost:3000
