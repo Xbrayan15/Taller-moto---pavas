@@ -57,7 +57,15 @@ def update_motocicleta_endpoint(
     current_user: Usuario = Depends(get_current_user)
 ):
     """Actualizar una motocicleta"""
-    db_motocicleta = update_motocicleta(db, motocicleta_id, motocicleta_update)
+    try:
+        db_motocicleta = update_motocicleta(db, motocicleta_id, motocicleta_update)
+    except ValueError as error:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(error)
+        )
+
     if not db_motocicleta:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

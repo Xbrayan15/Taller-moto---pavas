@@ -140,6 +140,39 @@ Authorization: Bearer {{token}}
   "año": 2023
 }
 
+### Agregar servicios a una moto ya registrada
+PUT {{baseUrl}}/api/motocicletas/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "servicio_ids": [1, 2]
+}
+
+### Agregar trabajos de reparación personalizados en edición
+PUT {{baseUrl}}/api/motocicletas/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "trabajos_reparacion": [
+    "Cambio de guaya de clutch",
+    "Ajuste de cadena"
+  ]
+}
+
+### Actualizar datos y agregar servicios en una sola edición
+PUT {{baseUrl}}/api/motocicletas/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "modelo": "Honda CB650R",
+  "año": 2024,
+  "servicio_ids": [3],
+  "trabajos_reparacion": ["Limpieza de carburador"]
+}
+
 ### Eliminar motocicleta
 DELETE {{baseUrl}}/api/motocicletas/1
 Authorization: Bearer {{token}}

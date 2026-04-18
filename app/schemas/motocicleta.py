@@ -21,3 +21,5 @@ class MotocicletaResponse(BaseModel):
 class MotocicletaUpdate(BaseModel):
     modelo: str | None = None
     año: int | None = None
+    servicio_ids: list[int] | None = None
+    trabajos_reparacion: list[str] | None = None

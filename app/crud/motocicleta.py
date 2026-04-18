@@ -4,19 +4,25 @@ from app.models.item import Item
 from app.models.trabajo_servicio import TrabajoServicio
 from app.schemas.motocicleta import MotocicletaCreate, MotocicletaUpdate
 
+
+def _validate_servicio_ids(db: Session, servicio_ids: list[int]) -> None:
+    if not servicio_ids:
+        return
+
+    servicios_validos = db.query(Item).filter(Item.id.in_(servicio_ids)).all()
+    servicios_validos_ids = {servicio.id for servicio in servicios_validos}
+    servicios_invalidos = [servicio_id for servicio_id in servicio_ids if servicio_id not in servicios_validos_ids]
+
+    if servicios_invalidos:
+        raise ValueError(f"Servicios no válidos: {', '.join(map(str, servicios_invalidos))}")
+
 def create_motocicleta(db: Session, motocicleta: MotocicletaCreate) -> Motocicleta:
     """Crear una nueva motocicleta"""
     data = motocicleta.model_dump()
     servicio_ids = data.pop("servicio_ids", [])
     trabajos_reparacion = [trabajo.strip() for trabajo in data.pop("trabajos_reparacion", []) if trabajo.strip()]
 
-    if servicio_ids:
-        servicios_validos = db.query(Item).filter(Item.id.in_(servicio_ids)).all()
-        servicios_validos_ids = {servicio.id for servicio in servicios_validos}
-        servicios_invalidos = [servicio_id for servicio_id in servicio_ids if servicio_id not in servicios_validos_ids]
-
-        if servicios_invalidos:
-            raise ValueError(f"Servicios no válidos: {', '.join(map(str, servicios_invalidos))}")
+    _validate_servicio_ids(db, servicio_ids)
 
     db_motocicleta = Motocicleta(**data)
     db.add(db_motocicleta)
@@ -68,8 +74,49 @@ def update_motocicleta(db: Session, motocicleta_id: int, motocicleta_update: Mot
     db_motocicleta = db.query(Motocicleta).filter(Motocicleta.id == motocicleta_id).first()
     if db_motocicleta:
         update_data = motocicleta_update.model_dump(exclude_unset=True)
+
+        servicio_ids = update_data.pop("servicio_ids", None)
+        trabajos_reparacion = update_data.pop("trabajos_reparacion", None)
+
         for key, value in update_data.items():
             setattr(db_motocicleta, key, value)
+
+        if servicio_ids is not None:
+            _validate_servicio_ids(db, servicio_ids)
+
+            servicios_existentes = {
+                trabajo.item_id
+                for trabajo in db_motocicleta.trabajos_servicio
+                if trabajo.item_id is not None
+            }
+
+            for servicio_id in servicio_ids:
+                if servicio_id in servicios_existentes:
+                    continue
+
+                db.add(
+                    TrabajoServicio(
+                        motocicleta_id=db_motocicleta.id,
+                        item_id=servicio_id,
+                        estado="pendiente",
+                    )
+                )
+
+        if trabajos_reparacion is not None:
+            for trabajo in trabajos_reparacion:
+                detalle = trabajo.strip()
+                if not detalle:
+                    continue
+
+                db.add(
+                    TrabajoServicio(
+                        motocicleta_id=db_motocicleta.id,
+                        item_id=None,
+                        detalle_reparacion=detalle,
+                        estado="pendiente",
+                    )
+                )
+
         db.commit()
         db.refresh(db_motocicleta)
     return db_motocicleta
